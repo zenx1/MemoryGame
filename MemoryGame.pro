@@ -61,6 +61,8 @@ macx {
 }
 
 DISTFILES += \
+    qml/Constants.js \
+    qml/Game.js \
     qml/Game.qml \
     qml/Help.qml \
     qml/Helpers.js

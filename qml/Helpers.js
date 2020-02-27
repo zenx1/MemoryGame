@@ -1,23 +1,18 @@
-var UniqueRandomIntGenerator = function(min, max){
-    // min is inclusive, max is exclusive
-    var sortedIndexArray = [];
-    for (var i = min; i < max;i++){
-        sortedIndexArray.push(i);
+// randomly shuffles items in array
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
     }
-    return {
-        getNext: function(){
-            var randomIndex = Math.floor(Math.random() * (sortedIndexArray.length - min)) + min;;
-            var randomItem = sortedIndexArray[randomIndex];
-            sortedIndexArray.splice(randomIndex, 1);
-            return randomItem;
-        }
-     };
-};
+}
 
 function Timer() {
     return Qt.createQmlObject("import QtQuick 2.0; Timer {}", root);
 }
 
+// setTimout polyfill
 var setTimout = function(callback, delay){
     var timer = new Helpers.Timer();
     timer.interval = delay;
@@ -27,8 +22,3 @@ var setTimout = function(callback, delay){
     });
     timer.start();
 };
-
-var lastSelectedIndex = null;
-
-var solvedIcon = "../assets/icons/solved.png";
-var maskIcon = "../assets/icons/mask.png";

@@ -1,5 +1,6 @@
 import Felgo 3.0
 import QtQuick 2.0
+import "Constants.js" as Constants
 
 App {
     // You get free licenseKeys from https://felgo.com/licenseKey
@@ -19,7 +20,7 @@ App {
               id: infoText
               text: "Select difficulty level to start the game"
               anchors.top: parent.top
-              anchors.margins: dp(15)
+              anchors.margins: dp(25)
               width: mainPage.width
               wrapMode: AppText.WrapAtWordBoundaryOrAnywhere
               horizontalAlignment: Text.AlignHCenter
@@ -36,17 +37,16 @@ App {
                   }
                   style.backgroundColor: "#800000FF"
                   onSelected: function(){
-                      mainPage.navigationStack.push(Qt.resolvedUrl("Game.qml"))
+                      mainPage.navigationStack.push(Qt.resolvedUrl("Game.qml"), {difficulty: modelData.difficulty});
                   }
               }
               model: [
-                  { difficulty: "Easy" },
-                  { difficulty: "Medium" },
-                  { difficulty: "Expert" }
+                  { difficulty: Constants.DIFFICULTY_LEVEL.EASY },
+                  { difficulty: Constants.DIFFICULTY_LEVEL.MEDIUM },
+                  { difficulty: Constants.DIFFICULTY_LEVEL.EXPERT }
               ]
               anchors.top: infoText.bottom
-              anchors.bottom: helpButton.top
-              anchors.margins: dp(15)
+              anchors.margins: dp(25)
             }
 
             FloatingActionButton {
@@ -60,7 +60,6 @@ App {
               visible: true // show on all platforms, default is only Android
               width: dp(30)
               height: dp(30)
-
             }
         }
     }
