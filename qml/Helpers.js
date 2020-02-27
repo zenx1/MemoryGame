@@ -8,13 +8,14 @@ function shuffleArray(array) {
     }
 }
 
+// imports QtQuick 2.0 Timer object
 function Timer() {
     return Qt.createQmlObject("import QtQuick 2.0; Timer {}", root);
 }
 
 // setTimout polyfill
 var setTimout = function(callback, delay){
-    var timer = new Helpers.Timer();
+    var timer = new Timer();
     timer.interval = delay;
     timer.repeat = false;
     timer.triggered.connect(function () {

@@ -1,5 +1,1 @@
-<RCC>
-    <qresource prefix="/new/HelpText">
-        <file>assets/strings/HelpText.txt</file>
-    </qresource>
-</RCC>
+<RCC/>

@@ -13,10 +13,16 @@ var ICON = {
     }
 };
 
+// path to 'confetti' gif
 var CONFETTI_GIF_PATH = "../assets/icons/confetti.gif";
 
+// string identifiers of possible game difficulty levels
 var DIFFICULTY_LEVEL = {
     EASY: "Easy",
     MEDIUM: "Medium",
     EXPERT: "Expert"
 };
+
+// paths to 'solved' and 'cheers' audio files
+var SOLVED_SOUND_FILE_PATH = "../assets/sounds/solved.wav";
+var CHEERS_SOUND_FILE_PATH = "../assets/sounds/cheers.wav";
