@@ -15,6 +15,7 @@ function getTransitionDuration(difficulty, state){
     if (difficulty === Constants.DIFFICULTY_LEVEL.MEDIUM){
         return 1000;
     }
+    // case when difficulty === Expert
     return 0;
 };
 

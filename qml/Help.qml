@@ -8,7 +8,7 @@ Page {
     // make helpText scrollable
     AppFlickable {
         anchors.fill: parent
-         // set margins so that text is not displayed from end to end of screen
+        // set margins so that text is not displayed from end to end of screen
         anchors.margins: dp(15)
         // set content width and height to helpText width and height
         contentWidth: helpText.width

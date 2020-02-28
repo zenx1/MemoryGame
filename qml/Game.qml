@@ -42,10 +42,6 @@ Page {
         Component {
             id: iconDelegate
             Item {
-                // set width and height of item to fill grid cell
-                width: imageGrid.cellWidth
-                height: imageGrid.cellHeight
-
                 // sets state of selected imagesColumn(s) to 'solved'
                 function setAsSolved(){
                     if (imagesColumn.state === Constants.ICON.STATES.SOLVED) {
@@ -81,10 +77,8 @@ Page {
 
                 // plays sound and sets state of last 2 selected icons as 'solved'
                 function matchFound() {
-                    // play 'solved' sound
                     solvedSound.stop();
                     solvedSound.play();
-                    // set state of the icons as 'solved'
                     setAsSolved();
                     previouslySelectedAnimalIcon = null;
                 }
@@ -129,11 +123,11 @@ Page {
 
                     // container for animal and 'mask' icons
                     Rectangle {
-                        // "#91c0cc"
                         color: "#d4d4d4"
                         width: iconContainerWidth
                         height: iconContainerHeight
                         radius: 4
+
                         // animal icon
                         Image {
                             id: animalIcon
@@ -145,7 +139,7 @@ Page {
                             source: animalIconPath
                         }
 
-                        // image which is displayed on top of animal icon to hide it from user
+                        // icon which is displayed by default instead of animal icon
                         Image {
                             id: maskIcon
                             smooth: true
@@ -155,51 +149,51 @@ Page {
                             anchors.margins: dp(5)
                             source: Constants.ICON.PATHS.MASK
                         }
+
+                        // listens for tap/click on icon container
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: function(){
+                                // ignore if game has been solved
+                                if (solved){
+                                    return;
+                                }
+
+                                // ignore selection of icons which have already been matched or which are currently shown
+                                if(imagesColumn.state === Constants.ICON.STATES.SOLVED || imagesColumn.state === Constants.ICON.STATES.SHOWN){
+                                    return;
+                                }
+
+                                // show selected icon
+                                imagesColumn.state = Constants.ICON.STATES.SHOWN;
+
+                                if (!previouslySelectedAnimalIcon) {
+                                    // there is no previously selected icon
+                                    // set currently selected icon to be next previously selected icon
+                                    previouslySelectedAnimalIcon = animalIcon;
+                                    return;
+                                }
+
+                                if(previouslySelectedAnimalIcon.source === animalIcon.source){
+                                    // user has selected 2 matching animal icons
+                                    matchFound();
+
+                                    // keep track of how many matches user has made
+                                    matchedAnimalPairs++;
+                                    if (matchedAnimalPairs === 11){
+                                        // game has been completed
+                                        gameCompleted();
+                                    }
+                                } else {
+                                    // user has selected 2 non-matching animal icons
+                                    matchNotFound();
+                                }
+                            }
+                        }
                     }
 
                     // set default state of icon to 'masked' so that user doesn't see animal icon
                     state: Constants.ICON.STATES.MASKED
-                }
-
-                // listens for tap/click on icon container
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: function(){
-                        // ignore if game has been solved
-                        if (solved){
-                            return;
-                        }
-
-                        // ignore selection of icons which have already been matched or which are currently shown
-                        if(imagesColumn.state === Constants.ICON.STATES.SOLVED || imagesColumn.state === Constants.ICON.STATES.SHOWN){
-                            return;
-                        }
-
-                        // show selected icon
-                        imagesColumn.state = Constants.ICON.STATES.SHOWN;
-
-                        if (!previouslySelectedAnimalIcon) {
-                            // there is no previously selected icon
-                            // set currently selected icon to be next previously selected icon
-                            previouslySelectedAnimalIcon = animalIcon;
-                            return;
-                        }
-
-                        if(previouslySelectedAnimalIcon.source === animalIcon.source){
-                            // user has selected 2 matching animal icons
-                            matchFound();
-
-                            // keep track of how many matches user has made
-                            matchedAnimalPairs++;
-                            if (matchedAnimalPairs === 11){
-                                // game has been completed
-                                gameCompleted();
-                            }
-                        } else {
-                            // user has selected 2 non-matching animal icons
-                            matchNotFound();
-                        }
-                    }
                 }
 
                 // nice fadeIn effect on game start
@@ -212,28 +206,43 @@ Page {
             }
         }
 
+        // resizes imageGrid cell elements based on imageGrid width and height
+        function resizeIcons(){
+            var cellSize =  Helpers.calculateCellSize(imageGrid.width, imageGrid.height, 24);
+            // set cell width and height
+            imageGrid.cellWidth = cellSize.width;
+            imageGrid.cellHeight = cellSize.height;
+
+            // calculate size of icon container
+            iconContainerWidth = imageGrid.cellWidth - dp(2);
+            iconContainerHeight = imageGrid.cellHeight - dp(2);
+        }
+
+
+        // resize imageGrid cell elements on width or height change (on game start and possible screen rotation, etc)
+        onWidthChanged: {
+            resizeIcons();
+        }
+        onHeightChanged: {
+            resizeIcons();
+        }
+
         // GridView containing all the icons, essentially entire UI of the page
         GridView {
             id: imageGrid
             anchors.fill: parent
+            // disable grid scroll/swipe
+            interactive: false
             // set margins so that ui is not displayed from end to end of screen
             anchors.margins: dp(5)
             // set data source
             model: ListModel {
                 id: iconModel
             }
+
             // set template from which grid item should be created
             delegate: iconDelegate
-            focus: true
             Component.onCompleted: {
-                // set cell width and height
-                imageGrid.cellWidth = Math.floor(imageGrid.width / 4);
-                imageGrid.cellHeight = Math.floor(imageGrid.height / 6);
-
-                // calculate image size of icons
-                iconContainerWidth = imageGrid.cellWidth - 5;
-                iconContainerHeight = imageGrid.cellHeight - 5;
-
                 // get array with randomly selected image paths of animals (always containing 12 unique pairs of animals)
                 var randomIconPathCollection = Game.getRandomIconPathCollection();
 

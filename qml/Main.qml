@@ -1,5 +1,6 @@
 import Felgo 3.0
 import QtQuick 2.0
+import QtQuick.Window 2.11
 import "Constants.js" as Constants
 
 App {
@@ -8,7 +9,13 @@ App {
     //  * Publish your games & apps for the app stores
     //  * Remove the Felgo Splash Screen or set a custom one (available with the Pro Licenses)
     //  * Add plugins to monetize, analyze & improve your apps (available with the Pro Licenses)
-    //licenseKey: "<generate one from https://felgo.com/licenseKey>"
+    //licenseKey: "<generate one from https://felgo.com/licenseKey>
+    id: memoryGame
+
+    onInitTheme: {
+        // hide status bar
+        Theme.colors.statusBarStyle = Theme.colors.statusBarStyleHidden;
+    }
 
     NavigationStack {
         Page {
@@ -31,13 +38,18 @@ App {
             // list with different options of game difficulty to choose from
             AppListView {
                 id: difficultyList
+                // disable listview scroll/swipe
+                interactive: false
+                // anchor to infotext and set margins so that difficultyList is not directly below infoText
                 anchors.top: infoText.bottom
                 anchors.margins: dp(25)
+
                 // template of item in difficultyList
                 delegate: SimpleRow {
                     AppText {
-                        horizontalAlignment: Text.Center
+                        // set and align text
                         anchors.fill: parent
+                        horizontalAlignment: Text.Center
                         text: modelData.difficulty
                     }
                     style.backgroundColor: "#800000FF"
@@ -67,6 +79,8 @@ App {
                 width: dp(50)
                 height: dp(50)
             }
+
+
         }
     }
 }

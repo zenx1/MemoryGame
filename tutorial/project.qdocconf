@@ -1,0 +1,10 @@
+project = MemoryGame
+description = MemoryGame tutorial
+
+outputdir   = ./html
+
+sourcedirs  = ./
+
+sources.fileextensions  = *.qdoc
+
+outputformats = HTML
